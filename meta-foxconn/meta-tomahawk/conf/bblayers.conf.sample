@@ -15,6 +15,7 @@ BBLAYERS ?= " \
   ##OEROOT##/meta-openembedded/meta-webserver \
   ##OEROOT##/meta-phosphor \
   ##OEROOT##/meta-aspeed \
+  ##OEROOT##/meta-foxconn/ \
   ##OEROOT##/meta-foxconn/meta-tomahawk \
 "
 BBLAYERS_NON_REMOVABLE ?= " \
@@ -27,5 +28,6 @@ BBLAYERS_NON_REMOVABLE ?= " \
   ##OEROOT##/meta-openembedded/meta-webserver \
   ##OEROOT##/meta-phosphor \
   ##OEROOT##/meta-aspeed \
+  ##OEROOT##/meta-foxconn/ \
   ##OEROOT##/meta-foxconn/meta-tomahawk \
 "
