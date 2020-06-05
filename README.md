@@ -42,11 +42,11 @@ Currrently, our changes are in a different version. For that reason, follow step
 
 To setup the build environment for the Tomahawk follow these steps. 
 
-'''bash
+```bash
 git checkout conan-obmc
 export TEMPLATECONF=meta-foxconn/meta-tomahawk/conf
 . openbmc-env
-'''
+```
 
 #### 3.2) Master (v2.9.0-dev)
 
