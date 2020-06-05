@@ -30,7 +30,7 @@ sudo dnf groupinstall "C Development Tools and Libraries"
 ```
 ### 2) Download the source
 ```
-git clone git@https://github.com/loerac/openbmc
+git clone https://github.com/loerac/openbmc
 cd openbmc
 ```
 
