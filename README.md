@@ -30,11 +30,26 @@ sudo dnf groupinstall "C Development Tools and Libraries"
 ```
 ### 2) Download the source
 ```
-git clone git@github.com:openbmc/openbmc.git
+git clone git@https://github.com/loerac/openbmc
 cd openbmc
 ```
 
 ### 3) Target your hardware
+
+Currrently, our changes are in a different version. For that reason, follow step '3.1' for the Conan build, else just follow 3.2 for most recent builds.
+
+#### 3.1) conan-obmc (v2.8.0-dev)
+
+To setup the build environment for the Tomahawk follow these steps. 
+
+'''bash
+git checkout conan-obmc
+export TEMPLATECONF=meta-foxconn/meta-tomahawk/conf
+. openbmc-env
+'''
+
+#### 3.2) Master (v2.9.0-dev)
+
 Any build requires an environment set up according to your hardware target.
 There is a special script in the root of this repository that can be used
 to configure the environment as needed. The script is called `setup` and
