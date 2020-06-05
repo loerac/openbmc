@@ -1,0 +1,8 @@
+[Match]
+Name=eth0
+[Network]
+DHCP=false
+LinkLocalAddressing=yes
+IPv6AcceptRA=false
+Address=192.168.100.120/24
+Gateway=192.168.100.1

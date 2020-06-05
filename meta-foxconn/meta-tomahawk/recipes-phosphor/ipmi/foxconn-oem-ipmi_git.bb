@@ -1,0 +1,46 @@
+SUMMARY = "Foxconn OEM IPMI commands"
+DESCRIPTION = "Foxconn OEM IPMI commands"
+
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+
+SRCBRANCH = "common-dev"
+
+SRC_URI = "git://git@10.18.204.94/mke-bmc/foxconn-oem-ipmi.git;protocol=ssh;branch=${SRCBRANCH}"
+SRCREV = "25fa27769c0a0af70f26fa23a0b6a53e49f7ebf7"
+
+#SRC_URI = "git:///home/boyer/foxconn-oem-ipmi.git;protocol=file;branch=${SRCBRANCH}"
+#SRCREV = "1a4c251d930bc19e719c5cab755c178a775471cd"
+
+SRC_URI += "file://version.json"
+
+S = "${WORKDIR}/git"
+PV = "0.1+git${SRCPV}"
+
+DEPENDS = "boost phosphor-ipmi-host phosphor-logging systemd"
+#DEPENDS = "boost entity-manager phosphor-ipmi-host phosphor-logging systemd"
+#RDEPENDS_${PN} = "entity-manager"
+
+inherit cmake obmc-phosphor-ipmiprovider-symlink
+
+EXTRA_OECMAKE="-DENABLE_TEST=0 -DYOCTO=1"
+
+LIBRARY_NAMES = "libzfxnoemcmds.so"
+
+HOSTIPMI_PROVIDER_LIBRARY += "${LIBRARY_NAMES}"
+NETIPMI_PROVIDER_LIBRARY += "${LIBRARY_NAMES}"
+
+FILES_${PN}_append = " ${libdir}/ipmid-providers/lib*${SOLIBS}"
+FILES_${PN}_append = " ${libdir}/host-ipmid/lib*${SOLIBS}"
+FILES_${PN}_append = " ${libdir}/net-ipmid/lib*${SOLIBS}"
+FILES_${PN}-dev_append = " ${libdir}/ipmid-providers/lib*${SOLIBSDEV}"
+
+FILES_${PN} += "/etc/foxconn/"
+
+do_install_append(){
+   install -d ${D}${includedir}/foxconn-oem-ipmi
+   install -m 0644 -D ${S}/include/*.hpp ${D}${includedir}/foxconn-oem-ipmi
+
+   install -d ${D}/etc/foxconn/
+   install -m 0644 ${WORKDIR}/version.json ${D}/etc/foxconn/
+}

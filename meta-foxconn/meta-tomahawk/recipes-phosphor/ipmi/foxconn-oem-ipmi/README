@@ -1,0 +1,50 @@
+The version.json file is a work in progress. But this file is intend to be used for storing of the firmware information
+and configuration for bus and address for the reading of diffrent firmware of device contained on the system.
+
+These include:
+    -BIOS firmware version
+    -CPLD firmware version
+    -Motherboard version
+    -PSU firmware version
+    -FRU VPD version
+
+The format for the BMC firmware version follows the foxconn BMC name convention
+
+Char 1&2:
+    Major Revision Number
+    Dec:00-99
+
+Char 3&4:
+    Minor Revision
+    Dec:00-99
+
+Char 5:
+    Server Type:
+    0: General
+    A: Tower Line
+    B: Blade Line
+    C: Rack Line
+    D: Scalable Line
+    E: Cloud Line
+    F: JBOD
+
+Char 6:
+    Processor
+
+Char 7&8:
+    Project Tag
+
+Char 9:
+    Motherboard Version:
+    1: EVT
+    2: DVT
+    3: PVT
+    4: Production
+    5: Maintenance
+    
+Char 10:
+    SOC Type
+
+Char 11&12
+    SKU
+
