@@ -1,0 +1,3 @@
+[submodule "foxconn-oem-ipmi"]
+	path = foxconn-oem-ipmi
+	url = git@github.com:boyercee/foxconn-oem-ipmi.git

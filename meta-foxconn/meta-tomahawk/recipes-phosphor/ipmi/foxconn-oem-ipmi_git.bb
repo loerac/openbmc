@@ -4,22 +4,21 @@ DESCRIPTION = "Foxconn OEM IPMI commands"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-SRCBRANCH = "common-dev"
+SRCBRANCH = "master"
 
-SRC_URI = "git://git@10.18.204.94/mke-bmc/foxconn-oem-ipmi.git;protocol=ssh;branch=${SRCBRANCH}"
-SRCREV = "25fa27769c0a0af70f26fa23a0b6a53e49f7ebf7"
-
-#SRC_URI = "git:///home/boyer/foxconn-oem-ipmi.git;protocol=file;branch=${SRCBRANCH}"
-#SRCREV = "1a4c251d930bc19e719c5cab755c178a775471cd"
+SRC_URI = "git://github.com/boyercee/foxconn-oem-ipmi;protocol=ssh;branch=${SRCBRANCH}"
+SRCREV = "8ea02b62bd845b28ee3316974d27422d2512e690"
 
 SRC_URI += "file://version.json"
+SRC_URI += "file://bmc-eth0-bond \
+           file://bmc-eth0-save \
+           file://bmc-bond0 \
+          "
 
 S = "${WORKDIR}/git"
 PV = "0.1+git${SRCPV}"
 
 DEPENDS = "boost phosphor-ipmi-host phosphor-logging systemd"
-#DEPENDS = "boost entity-manager phosphor-ipmi-host phosphor-logging systemd"
-#RDEPENDS_${PN} = "entity-manager"
 
 inherit cmake obmc-phosphor-ipmiprovider-symlink
 
@@ -36,6 +35,7 @@ FILES_${PN}_append = " ${libdir}/net-ipmid/lib*${SOLIBS}"
 FILES_${PN}-dev_append = " ${libdir}/ipmid-providers/lib*${SOLIBSDEV}"
 
 FILES_${PN} += "/etc/foxconn/"
+FILES_${PN} += "/etc/systemd/network/"
 
 do_install_append(){
    install -d ${D}${includedir}/foxconn-oem-ipmi
@@ -43,4 +43,7 @@ do_install_append(){
 
    install -d ${D}/etc/foxconn/
    install -m 0644 ${WORKDIR}/version.json ${D}/etc/foxconn/
+
+   install -d ${D}/etc/systemd/network
+   install -m 0644 -D ${WORKDIR}/bmc-* ${D}/etc/systemd/network
 }
