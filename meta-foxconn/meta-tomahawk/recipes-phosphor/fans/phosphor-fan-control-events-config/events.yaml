@@ -1,0 +1,237 @@
+groups:
+    - name: air_cooled_zone0_fans
+      description: Group of fan inventory objects for air cooled zone 0
+      type: /xyz/openbmc_project/inventory
+      members:
+          - /system/chassis/motherboard/fan1
+          - /system/chassis/motherboard/fan2
+          - /system/chassis/motherboard/fan3
+          - /system/chassis/motherboard/fan4
+
+    - name: zone0_outlet
+      description: Group of outlet temperature sensors for zone 0
+      type: /xyz/openbmc_project/sensors
+      members:
+          - /temperature/outlet1
+          - /temperature/outlet2
+          - /temperature/outlet3
+          - /temperature/inlet1
+          - /temperature/inlet2
+
+matches:
+    - name: propertiesChanged
+      parameters:
+          - object
+          - interface
+    - name: interfacesAdded
+      parameters:
+          - object
+    - name: nameOwnerChanged
+      parameters:
+          - object
+          - interface
+
+signals:
+    - name: propertiesChanged
+      description: >
+          A property changed match
+      parameters:
+          - type
+          - object
+          - interface
+          - property
+      match: propertiesChanged
+    - name: interfacesAdded
+      description: >
+          An interfaces added match
+      parameters:
+          - type
+          - object
+          - interface
+          - property
+      match: interfacesAdded
+    - name: nameOwnerChanged
+      description: >
+          A name owner changed match
+      parameters:
+      match: nameOwnerChanged
+
+methods:
+    - name: getProperties
+      description: >
+          Get the property values of the given group members
+          by performing a `GetProperty` method call on each
+      parameters:
+          - type
+    - name: nameHasOwner
+      description: >
+          A NameHasOwner method call to be performed on all event group members
+      parameters:
+
+handlers:
+    - name: setProperty
+      description: >
+          Sets a value for the given object/interface/property
+      parameters:
+          - type
+    - name: setService
+      description: >
+          Sets the service name and ownership status for the given group
+      parameters:
+          - group
+
+preconditions:
+    - name: property_states_match
+      description: >
+          All defined properties must match the values given to
+          enable a set speed event otherwise fan speeds are set to full
+      parameters:
+          - groups
+    - name: services_missing_owner
+      description: >
+          Any services missing an owner enable the events given otherwise
+          the events are removed/disabled
+      parameters:
+
+actions:
+    - name: call_actions_based_on_timer
+      description: >
+          Sets up a list of actions to be invoked when the defined timer
+          expires (or for each expiration of a repeating timer)
+      parameters:
+          - timer
+          - actions
+    - name: default_floor_on_missing_owner
+      description: >
+          Set the fan floor to the default floor
+    - name: set_speed_on_missing_owner
+      description: >
+          Set fans to the given speed when any service within the group
+          no longer exists
+      parameters:
+          - speed
+    - name: set_request_speed_base_with_max
+      description: >
+          Set the base request speed of a zone to the max value of a group for
+          calculating a new target speed
+    - name: count_state_before_speed
+      description: Set the speed when a number of properties at a state
+      parameters:
+          - count
+          - property
+          - speed
+    - name: set_floor_from_average_sensor_value
+      description: Set floor speed from first entry with average less than key
+      parameters:
+          - map
+    - name: set_ceiling_from_average_sensor_value
+      description: Set ceiling speed based on key transition values with average
+      parameters:
+          - map
+    - name: set_net_increase_speed
+      description: >
+          Set the speed increase delta based on a factor applied to
+          the delta increase size times the given value and property's
+          value difference
+      parameters:
+          - property
+          - factor
+          - delta
+    - name: set_net_decrease_speed
+      description: >
+          Set the speed decrease delta based on a factor applied to
+          the delta decrease size times the given value and property's
+          value difference
+      parameters:
+          - property
+          - factor
+          - delta
+
+events:
+    - name: default_fan_floor_on_service_fail
+      precondition:
+          name: services_missing_owner
+          groups:
+              - name: zone0_outlet
+                interface: xyz.openbmc_project.Sensor.Value
+                property:
+                    name: Value
+                    type: int64_t
+          triggers:
+              - name: init
+                method: nameHasOwner
+                handler: setService
+              - name: signal
+                signal: nameOwnerChanged
+                handler: setService
+          events:
+              - name: default_fan_floor
+                groups:
+                    - name: zone0_outlet
+                      interface: xyz.openbmc_project.Sensor.Value
+                      property:
+                          name: Value
+                          type: int64_t
+                triggers:
+                    - name: timer
+                      interval: 5000000
+                      type: oneshot
+                actions:
+                    - name: default_floor_on_missing_owner
+    - name: missing_or_fails_before_high_speed_air
+      groups:
+          - name: air_cooled_zone0_fans
+            interface: xyz.openbmc_project.Inventory.Item
+            property:
+                name: Present
+                type: bool
+          - name: air_cooled_zone0_fans
+            interface: xyz.openbmc_project.State.Decorator.OperationalStatus
+            property:
+                name: Functional
+                type: bool
+      triggers:
+          - name: init
+            method: getProperties
+            handler: setProperty
+          - name: signal
+            signal: propertiesChanged
+            handler: setProperty
+      actions:
+          - name: count_state_before_speed
+            count: 1
+            property:
+                value: false
+                type: bool
+            speed:
+                value: 100
+                type: uint64_t
+    - name: set_air_cooled_speed_boundaries_based_on_outlet
+      groups:
+          - name: zone0_outlet
+            interface: xyz.openbmc_project.Sensor.Value
+            property:
+                name: Value
+                type: int64_t
+      triggers:
+          - name: init
+            method: getProperties
+            handler: setProperty
+          - name: signal
+            signal: propertiesChanged
+            handler: setProperty
+      actions:
+          - name: set_floor_from_average_sensor_value
+            map:
+                value:
+                    - 20000: 92
+                    - 32000: 110
+                    - 37000: 125
+                    - 40000: 144
+                type: std::map<int64_t, uint64_t>
+          - name: set_ceiling_from_average_sensor_value
+            map:
+                value:
+                    - 20000: 175
+                    - 27000: 255
+                type: std::map<int64_t, uint64_t>

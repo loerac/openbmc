@@ -1,63 +1,68 @@
 fans:
   - inventory: /system/chassis/motherboard/fan1
-    allowed_out_of_range_time: 30
-    deviation: 15
-    num_sensors_nonfunc_for_fan_nonfunc: 1
+    functional_delay: 60
+    allowed_out_of_range_time: 40
+    deviation: 55
+    num_sensors_nonfunc_for_fan_nonfunc: 2
     sensors:
       - name: fan1_0
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
       - name: fan1_1
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
 
   - inventory: /system/chassis/motherboard/fan2
-    allowed_out_of_range_time: 30
-    deviation: 15
-    num_sensors_nonfunc_for_fan_nonfunc: 1
+    functional_delay: 60
+    allowed_out_of_range_time: 40
+    deviation: 55
+    num_sensors_nonfunc_for_fan_nonfunc: 2
     sensors:
       - name: fan2_0
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
       - name: fan2_1
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
 
   - inventory: /system/chassis/motherboard/fan3
-    allowed_out_of_range_time: 30
-    deviation: 15
-    num_sensors_nonfunc_for_fan_nonfunc: 1
+    functional_delay: 60
+    allowed_out_of_range_time: 40 
+    deviation: 55
+    num_sensors_nonfunc_for_fan_nonfunc: 2
     sensors:
       - name: fan3_0
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
       - name: fan3_1
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
+
   - inventory: /system/chassis/motherboard/fan4
-    allowed_out_of_range_time: 30
-    deviation: 15
-    num_sensors_nonfunc_for_fan_nonfunc: 1
+    functional_delay: 60
+    allowed_out_of_range_time: 40
+    deviation: 55
+    num_sensors_nonfunc_for_fan_nonfunc: 2
     sensors:
       - name: fan4_0
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
       - name: fan4_1
         has_target: true
         target_interface: xyz.openbmc_project.Control.FanPwm
-        factor: 21
-        offset: 1600
+        factor: 83
+        offset: 2010
